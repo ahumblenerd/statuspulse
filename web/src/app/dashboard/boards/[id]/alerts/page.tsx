@@ -67,7 +67,11 @@ export default function BoardAlertsPage() {
 
   return (
     <>
-      <SiteHeader title="Board Alerts" />
+      <SiteHeader breadcrumbs={[
+        { label: "Boards", href: "/dashboard/boards" },
+        { label: "Board", href: `/dashboard/boards/${boardId}` },
+        { label: "Alerts" },
+      ]} />
       <div className="p-4 space-y-4">
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">

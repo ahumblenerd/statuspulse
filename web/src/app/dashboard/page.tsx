@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, Server, ShieldCheck, Clock } from "lucide-react";
 import Link from "next/link";
+
 import { getIncidents, getServices } from "@/api/sdk.gen";
 import { Onboarding } from "@/components/onboarding";
 import { SiteHeader } from "@/components/site-header";
@@ -12,35 +13,36 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useStatusQuery } from "@/hooks/use-status";
 
-function StatsCards({
-  totalServices,
-  activeIncidents,
-  staleServices,
-  status,
-}: {
-  totalServices: number;
-  activeIncidents: number;
-  staleServices: number;
-  status: string;
+function StatsCards({ totalServices, activeIncidents, staleServices, status }: {
+  totalServices: number; activeIncidents: number; staleServices: number; status: string;
 }) {
   const cards = [
-    { label: "Services", value: totalServices, icon: Server },
-    { label: "Active Incidents", value: activeIncidents, icon: AlertTriangle },
-    { label: "Stale Services", value: staleServices, icon: Clock },
-    { label: "Overall Status", value: status, icon: ShieldCheck },
+    { label: "Services", value: totalServices, icon: Server, href: "/dashboard/services" },
+    { label: "Incidents", value: activeIncidents, icon: AlertTriangle, href: "/dashboard/incidents" },
+    { label: "Unchecked", value: staleServices, icon: Clock, href: "/dashboard/services", tip: "Services not yet polled" },
+    { label: "Status", value: null, icon: ShieldCheck, href: "/dashboard/boards", status },
   ];
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {cards.map((c) => (
-        <Card key={c.label}>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">{c.label}</CardTitle>
-            <c.icon className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{c.value}</div>
-          </CardContent>
-        </Card>
+        <Link key={c.label} href={c.href}>
+          <Card className="hover:bg-accent/50 transition-colors cursor-pointer">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium" title={c.tip}>{c.label}</CardTitle>
+              <c.icon className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              {c.status ? (
+                <div className="flex items-center gap-2">
+                  <StatusDot status={c.status} />
+                  <span className="text-2xl font-bold capitalize">{c.status}</span>
+                </div>
+              ) : (
+                <div className="text-2xl font-bold">{c.value}</div>
+              )}
+            </CardContent>
+          </Card>
+        </Link>
       ))}
     </div>
   );
@@ -54,7 +56,18 @@ function RecentIncidents() {
       return res.data?.incidents ?? [];
     },
   });
-  if (!data?.length) return null;
+  if (!data?.length) {
+    return (
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-medium">Active Incidents</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">No incidents — all clear.</p>
+        </CardContent>
+      </Card>
+    );
+  }
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -62,21 +75,14 @@ function RecentIncidents() {
       </CardHeader>
       <CardContent className="space-y-3">
         {data.map((inc) => (
-          <Link
-            key={inc.id}
-            href={`/dashboard/incidents/${inc.id}`}
-            className="flex items-start gap-3 hover:bg-accent p-2 -mx-2"
-          >
-            <StatusDot status={inc.impact ?? inc.status} className="mt-1" />
+          <Link key={inc.id} href={`/dashboard/incidents/${inc.id}`}
+            className="flex items-start gap-3 hover:bg-accent p-2 -mx-2">
+            <StatusDot status={inc.impact ?? "operational"} className="mt-1" />
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium truncate">{inc.title}</p>
-              <p className="text-xs text-muted-foreground">
-                {new Date(inc.updatedAt).toLocaleString()}
-              </p>
+              <p className="text-xs text-muted-foreground">{new Date(inc.updatedAt).toLocaleString()}</p>
             </div>
-            <Badge variant="outline" className="text-xs shrink-0">
-              {inc.status}
-            </Badge>
+            <Badge variant="outline" className="text-xs shrink-0">{inc.status}</Badge>
           </Link>
         ))}
       </CardContent>
@@ -100,21 +106,17 @@ function ServicesList() {
       </CardHeader>
       <CardContent className="space-y-1">
         {data.slice(0, 10).map((s) => (
-          <Link
-            key={s.id}
-            href={`/dashboard/services/${s.id}`}
-            className="flex items-center gap-3 p-2 -mx-2 hover:bg-accent"
-          >
+          <Link key={s.id} href={`/dashboard/services/${s.id}`}
+            className="flex items-center gap-3 p-2 -mx-2 hover:bg-accent">
             <StatusDot status={s.status} />
             <span className="text-sm flex-1 truncate">{s.name}</span>
-            <Badge variant="secondary" className="text-xs">
-              {s.category}
-            </Badge>
+            <Badge variant="secondary" className="text-xs">{s.category}</Badge>
           </Link>
         ))}
         {data.length > 10 && (
-          <Link href="/dashboard/services" className="block text-xs text-muted-foreground p-2">
-            View all {data.length} services →
+          <Link href="/dashboard/services"
+            className="block text-xs text-primary hover:underline p-2">
+            View all {data.length} services
           </Link>
         )}
       </CardContent>
@@ -123,7 +125,7 @@ function ServicesList() {
 }
 
 export default function DashboardPage() {
-  const { data: status, isLoading } = useStatusQuery();
+  const { data: status, isLoading, dataUpdatedAt } = useStatusQuery();
 
   if (isLoading) return <div className="animate-pulse h-full" />;
 
@@ -147,6 +149,11 @@ export default function DashboardPage() {
           <ServicesList />
           <RecentIncidents />
         </div>
+        {dataUpdatedAt > 0 && (
+          <p className="text-xs text-muted-foreground text-center">
+            Last updated {new Date(dataUpdatedAt).toLocaleTimeString()}
+          </p>
+        )}
       </div>
     </>
   );

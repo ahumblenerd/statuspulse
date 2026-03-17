@@ -52,7 +52,11 @@ export default function MonitorsPage() {
 
   return (
     <>
-      <SiteHeader title="Services" />
+      <SiteHeader breadcrumbs={[
+        { label: "Boards", href: "/dashboard/boards" },
+        { label: "Board", href: `/dashboard/boards/${boardId}` },
+        { label: "Services" },
+      ]} />
       <div className="p-4 space-y-4">
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">

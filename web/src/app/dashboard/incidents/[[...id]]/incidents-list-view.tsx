@@ -77,6 +77,7 @@ export function IncidentsListView() {
             data={data ?? []}
             searchKey="title"
             searchPlaceholder="Search incidents..."
+            emptyMessage="No incidents — everything looks good! Incidents appear automatically when a monitored service changes status."
             toolbar={
               <div className="flex gap-1">
                 <Button

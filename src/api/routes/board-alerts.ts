@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { z } from "zod";
 import {
@@ -5,6 +6,8 @@ import {
   deleteBoardAlertTarget,
   listBoardAlertTargets,
 } from "../../db/board-queries.js";
+import { db } from "../../db/client.js";
+import { boardAlertTargets } from "../../db/schema.js";
 import { config } from "../../lib/config.js";
 
 export const boardAlertsRoutes = new Hono();
@@ -33,6 +36,19 @@ boardAlertsRoutes.post("/", async (c) => {
 
   const id = createBoardAlertTarget({ boardId, ...parsed.data });
   return c.json({ ok: true, id }, 201);
+});
+
+/** Update alert target. */
+boardAlertsRoutes.patch("/:id", async (c) => {
+  const id = c.req.param("id");
+  const body = await c.req.json();
+  const allowed: Record<string, unknown> = {};
+  if (body.name !== undefined) allowed.name = body.name;
+  if (body.url !== undefined) allowed.url = body.url;
+  if (body.type !== undefined) allowed.type = body.type;
+  if (body.enabled !== undefined) allowed.enabled = body.enabled;
+  db.update(boardAlertTargets).set(allowed).where(eq(boardAlertTargets.id, id)).run();
+  return c.json({ ok: true });
 });
 
 /** Delete alert target. */

@@ -26,7 +26,9 @@ export function BoardSwitcher() {
 
   return (
     <div className="space-y-1">
-      <span className="text-xs text-muted-foreground px-2">Boards</span>
+      <Link href="/dashboard/boards" className="text-xs text-muted-foreground px-2 hover:text-foreground">
+        Boards
+      </Link>
       <div className="space-y-0.5">
         {boards.slice(0, 5).map((b) => (
           <Link

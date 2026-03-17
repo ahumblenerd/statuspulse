@@ -126,6 +126,7 @@ export default function PluginsPage() {
             data={data ?? []}
             searchKey="name"
             searchPlaceholder="Search plugins..."
+            emptyMessage="No plugins yet. Plugins let you monitor custom internal services via health check URLs."
             toolbar={<AddPluginDialog />}
           />
         )}
