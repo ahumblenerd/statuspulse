@@ -1,0 +1,12 @@
+node_modules
+web/node_modules
+web/.next
+dist
+dist-web
+data
+coverage
+.env
+*.db
+*.db-wal
+*.db-shm
+.git
