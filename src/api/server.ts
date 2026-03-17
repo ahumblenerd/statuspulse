@@ -1,5 +1,4 @@
 import { serve } from "@hono/node-server";
-import { serveStatic } from "@hono/node-server/serve-static";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
@@ -67,26 +66,8 @@ export function createApp() {
     return c.json(JSON.parse(spec));
   });
 
-  // Serve built frontend assets (Next.js static export)
-  app.use("/_next/*", serveStatic({ root: "./dist-web" }));
-
-  // Serve Next.js static export HTML for all non-API routes
-  app.get("*", async (c) => {
-    try {
-      const { readFileSync, existsSync } = await import("fs");
-      const { join } = await import("path");
-      const pathname = new URL(c.req.url).pathname.replace(/\/$/, "") || "/index";
-      const base = join(process.cwd(), "dist-web");
-      // Try exact route HTML, then parent route, then index.html
-      for (const candidate of [`${pathname}.html`, `${pathname}/index.html`, "index.html"]) {
-        const file = join(base, candidate);
-        if (existsSync(file)) return c.html(readFileSync(file, "utf-8"));
-      }
-      return c.text("StatusPulse is running. Visit /api/status for the API.");
-    } catch {
-      return c.text("StatusPulse is running. Visit /api/status for the API.");
-    }
-  });
+  // Fallback — nginx serves the frontend, Hono is API-only
+  app.get("/", (c) => c.json({ name: "StatusPulse API", docs: "/api/openapi.json" }));
 
   return app;
 }

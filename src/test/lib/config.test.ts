@@ -20,8 +20,8 @@ describe("config", () => {
 
     const { config } = await import("../../lib/config.js");
     expect(config.DATABASE_PATH).toBe("./data/statuspulse.db");
-    expect(config.API_PORT).toBe(3000);
-    expect(config.MCP_PORT).toBe(3001);
+    expect(config.API_PORT).toBe(3001);
+    expect(config.MCP_PORT).toBe(3002);
     expect(config.RESTATE_PORT).toBe(9080);
     expect(config.AUTH_MODE).toBe("none");
     expect(config.DEFAULT_POLL_INTERVAL_SECONDS).toBe(120);

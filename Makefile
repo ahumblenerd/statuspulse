@@ -18,24 +18,24 @@ generate: ## Regenerate frontend SDK from OpenAPI spec
 dev: ## Start backend (hot reload) + frontend dev server
 	@make kill-ports 2>/dev/null || true
 	npx tsx watch src/index.ts &
-	cd web && npx vite --port 5173 &
-	@echo "\n  Backend:  http://localhost:3000"
-	@echo "  Frontend: http://localhost:5173"
-	@echo "  MCP:      http://localhost:3001\n"
+	cd web && npx next dev --port 3000 &
+	@echo "\n  Frontend: http://localhost:3000"
+	@echo "  API:      http://localhost:3001"
+	@echo "  MCP:      http://localhost:3002\n"
 
 mock: ## Start in mock mode (no real network calls)
 	@make kill-ports 2>/dev/null || true
 	MOCK_MODE=true npx tsx watch src/index.ts &
-	cd web && npx vite --port 5173 &
-	@echo "\n  Backend (mock): http://localhost:3000"
-	@echo "  Frontend:       http://localhost:5173\n"
+	cd web && npx next dev --port 3000 &
+	@echo "\n  Frontend: http://localhost:3000 (mock)"
+	@echo "  API:      http://localhost:3001\n"
 
 dev-back: ## Start backend only (hot reload)
 	@make kill-ports 2>/dev/null || true
 	npx tsx watch src/index.ts
 
-dev-front: ## Start frontend only (Vite dev server)
-	cd web && npx vite --port 5173
+dev-front: ## Start frontend only (Next.js dev server)
+	cd web && npx next dev --port 3000
 
 mock-back: ## Start backend only in mock mode
 	@make kill-ports 2>/dev/null || true
@@ -76,11 +76,11 @@ restart: stop mock ## Restart in mock mode
 
 restart-dev: stop dev ## Restart in dev mode
 
-kill-ports: ## Kill processes on StatusPulse ports (3000, 3001, 9080)
+kill-ports: ## Kill processes on StatusPulse ports
 	@lsof -ti:3000 | xargs kill -9 2>/dev/null || true
 	@lsof -ti:3001 | xargs kill -9 2>/dev/null || true
+	@lsof -ti:3002 | xargs kill -9 2>/dev/null || true
 	@lsof -ti:9080 | xargs kill -9 2>/dev/null || true
-	@lsof -ti:5173 | xargs kill -9 2>/dev/null || true
 	@echo "Ports cleared"
 
 # ──────────────────────────────────────────
