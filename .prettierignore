@@ -1,0 +1,9 @@
+dist/
+dist-web/
+node_modules/
+data/
+*.db
+*.db-wal
+*.db-shm
+package-lock.json
+web/package-lock.json

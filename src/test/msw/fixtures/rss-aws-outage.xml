@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>AWS Service Health Dashboard</title>
+    <link>https://status.aws.amazon.com</link>
+    <item>
+      <title>Service disruption: Amazon EC2 (US-EAST-1)</title>
+      <description>We are experiencing elevated error rates and unavailable instances in US-EAST-1.</description>
+      <pubDate>RECENT_DATE_1</pubDate>
+      <guid>aws-ec2-outage-001</guid>
+    </item>
+    <item>
+      <title>Service disruption: Amazon RDS (US-EAST-1)</title>
+      <description>Database connectivity issues in US-EAST-1 due to underlying infrastructure.</description>
+      <pubDate>RECENT_DATE_2</pubDate>
+      <guid>aws-rds-outage-001</guid>
+    </item>
+  </channel>
+</rss>

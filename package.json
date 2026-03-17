@@ -1,0 +1,66 @@
+{
+  "name": "statuspulse",
+  "version": "1.0.0",
+  "description": "Self-hosted status aggregator for indie devs",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "dev:mock": "MOCK_MODE=true tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "db:push": "drizzle-kit push",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:web": "cd web && npx vitest run",
+    "test:all": "vitest run && cd web && npx vitest run",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "lint:web": "cd web && npx eslint src/",
+    "format": "prettier --write 'src/**/*.ts' 'web/src/**/*.{ts,tsx}'",
+    "format:check": "prettier --check 'src/**/*.ts' 'web/src/**/*.{ts,tsx}'",
+    "typecheck": "tsc --noEmit && cd web && npx tsc --noEmit",
+    "quality": "npm run typecheck && npm run lint && npm run format:check && npm run test",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "src/**/*.ts": [
+      "prettier --write",
+      "eslint --fix --max-warnings=0"
+    ],
+    "web/src/**/*.{ts,tsx}": [
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@hono/node-server": "^1.13.7",
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "@restatedev/restate-sdk": "^1.4.0",
+    "better-sqlite3": "^11.7.0",
+    "cheerio": "^1.0.0",
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.38.3",
+    "fast-xml-parser": "^4.5.1",
+    "hono": "^4.6.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.10.0",
+    "@vitest/coverage-v8": "^4.1.0",
+    "drizzle-kit": "^0.30.1",
+    "eslint": "^10.0.3",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import-x": "^4.16.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "msw": "^2.12.10",
+    "prettier": "^3.8.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.57.0",
+    "vitest": "^4.1.0"
+  }
+}

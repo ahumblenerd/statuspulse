@@ -1,0 +1,10 @@
+{
+  "status": {
+    "overall": "healthy",
+    "api": "healthy",
+    "database": "degraded",
+    "workers": "healthy"
+  },
+  "version": "2.1.0",
+  "uptime": 99.95
+}

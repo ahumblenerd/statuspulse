@@ -1,0 +1,488 @@
+[
+  {
+    "id": "github",
+    "name": "GitHub",
+    "category": "devtools",
+    "statusPageUrl": "https://www.githubstatus.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://www.githubstatus.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": true
+  },
+  {
+    "id": "aws",
+    "name": "AWS",
+    "category": "cloud",
+    "statusPageUrl": "https://health.aws.amazon.com/health/status",
+    "ingestion": { "type": "rss", "url": "https://status.aws.amazon.com/rss/all.rss" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": true
+  },
+  {
+    "id": "stripe",
+    "name": "Stripe",
+    "category": "payments",
+    "statusPageUrl": "https://status.stripe.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.stripe.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": true
+  },
+  {
+    "id": "vercel",
+    "name": "Vercel",
+    "category": "hosting",
+    "statusPageUrl": "https://www.vercel-status.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://www.vercel-status.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": true
+  },
+  {
+    "id": "cloudflare",
+    "name": "Cloudflare",
+    "category": "cdn",
+    "statusPageUrl": "https://www.cloudflarestatus.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://www.cloudflarestatus.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": true
+  },
+  {
+    "id": "netlify",
+    "name": "Netlify",
+    "category": "hosting",
+    "statusPageUrl": "https://www.netlifystatus.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://www.netlifystatus.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": true
+  },
+  {
+    "id": "datadog",
+    "name": "Datadog",
+    "category": "monitoring",
+    "statusPageUrl": "https://status.datadoghq.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.datadoghq.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": true
+  },
+  {
+    "id": "pagerduty",
+    "name": "PagerDuty",
+    "category": "monitoring",
+    "statusPageUrl": "https://status.pagerduty.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.pagerduty.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": true
+  },
+  {
+    "id": "twilio",
+    "name": "Twilio",
+    "category": "communication",
+    "statusPageUrl": "https://status.twilio.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.twilio.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": true
+  },
+  {
+    "id": "linear",
+    "name": "Linear",
+    "category": "devtools",
+    "statusPageUrl": "https://linearstatus.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://linearstatus.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": true
+  },
+  {
+    "id": "render",
+    "name": "Render",
+    "category": "hosting",
+    "statusPageUrl": "https://status.render.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.render.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": true
+  },
+  {
+    "id": "flyio",
+    "name": "Fly.io",
+    "category": "hosting",
+    "statusPageUrl": "https://status.flyio.net",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.flyio.net/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": true
+  },
+  {
+    "id": "supabase",
+    "name": "Supabase",
+    "category": "databases",
+    "statusPageUrl": "https://status.supabase.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.supabase.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": true
+  },
+  {
+    "id": "heroku",
+    "name": "Heroku",
+    "category": "hosting",
+    "statusPageUrl": "https://status.heroku.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.heroku.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": true
+  },
+  {
+    "id": "digitalocean",
+    "name": "DigitalOcean",
+    "category": "cloud",
+    "statusPageUrl": "https://status.digitalocean.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.digitalocean.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": true
+  },
+  {
+    "id": "gcp",
+    "name": "Google Cloud",
+    "category": "cloud",
+    "statusPageUrl": "https://status.cloud.google.com",
+    "ingestion": { "type": "rss", "url": "https://status.cloud.google.com/en/feed.atom" },
+    "pollIntervalSeconds": 180,
+    "defaultEnabled": true
+  },
+  {
+    "id": "azure",
+    "name": "Microsoft Azure",
+    "category": "cloud",
+    "statusPageUrl": "https://status.azure.com",
+    "ingestion": { "type": "rss", "url": "https://azurestatuscdn.azureedge.net/en-us/status/feed/" },
+    "pollIntervalSeconds": 180,
+    "defaultEnabled": true
+  },
+  {
+    "id": "openai",
+    "name": "OpenAI",
+    "category": "ai",
+    "statusPageUrl": "https://status.openai.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.openai.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": true
+  },
+  {
+    "id": "anthropic",
+    "name": "Anthropic",
+    "category": "ai",
+    "statusPageUrl": "https://status.anthropic.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.anthropic.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": true
+  },
+  {
+    "id": "sentry",
+    "name": "Sentry",
+    "category": "monitoring",
+    "statusPageUrl": "https://status.sentry.io",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.sentry.io/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": true
+  },
+  {
+    "id": "npm",
+    "name": "npm",
+    "category": "devtools",
+    "statusPageUrl": "https://status.npmjs.org",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.npmjs.org/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": true
+  },
+  {
+    "id": "docker",
+    "name": "Docker",
+    "category": "devtools",
+    "statusPageUrl": "https://www.dockerstatus.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://www.dockerstatus.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": true
+  },
+  {
+    "id": "circleci",
+    "name": "CircleCI",
+    "category": "devtools",
+    "statusPageUrl": "https://status.circleci.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.circleci.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "launchdarkly",
+    "name": "LaunchDarkly",
+    "category": "devtools",
+    "statusPageUrl": "https://status.launchdarkly.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.launchdarkly.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 180,
+    "defaultEnabled": false
+  },
+  {
+    "id": "mongodb",
+    "name": "MongoDB Atlas",
+    "category": "databases",
+    "statusPageUrl": "https://status.mongodb.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.mongodb.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "redis",
+    "name": "Redis Cloud",
+    "category": "databases",
+    "statusPageUrl": "https://status.redis.io",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.redis.io/api/v2/summary.json" },
+    "pollIntervalSeconds": 180,
+    "defaultEnabled": false
+  },
+  {
+    "id": "planetscale",
+    "name": "PlanetScale",
+    "category": "databases",
+    "statusPageUrl": "https://www.planetscalestatus.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://www.planetscalestatus.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "neon",
+    "name": "Neon",
+    "category": "databases",
+    "statusPageUrl": "https://neonstatus.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://neonstatus.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "auth0",
+    "name": "Auth0",
+    "category": "auth",
+    "statusPageUrl": "https://status.auth0.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.auth0.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "clerk",
+    "name": "Clerk",
+    "category": "auth",
+    "statusPageUrl": "https://status.clerk.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.clerk.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "firebase",
+    "name": "Firebase",
+    "category": "cloud",
+    "statusPageUrl": "https://status.firebase.google.com",
+    "ingestion": { "type": "rss", "url": "https://status.firebase.google.com/en/feed.atom" },
+    "pollIntervalSeconds": 180,
+    "defaultEnabled": false
+  },
+  {
+    "id": "sendgrid",
+    "name": "SendGrid",
+    "category": "communication",
+    "statusPageUrl": "https://status.sendgrid.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.sendgrid.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "postmark",
+    "name": "Postmark",
+    "category": "communication",
+    "statusPageUrl": "https://status.postmarkapp.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.postmarkapp.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "mailgun",
+    "name": "Mailgun",
+    "category": "communication",
+    "statusPageUrl": "https://status.mailgun.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.mailgun.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "resend",
+    "name": "Resend",
+    "category": "communication",
+    "statusPageUrl": "https://resend-status.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://resend-status.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "algolia",
+    "name": "Algolia",
+    "category": "devtools",
+    "statusPageUrl": "https://status.algolia.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.algolia.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 180,
+    "defaultEnabled": false
+  },
+  {
+    "id": "fastly",
+    "name": "Fastly",
+    "category": "cdn",
+    "statusPageUrl": "https://status.fastly.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.fastly.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "akamai",
+    "name": "Akamai",
+    "category": "cdn",
+    "statusPageUrl": "https://www.akamaistatus.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://www.akamaistatus.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 180,
+    "defaultEnabled": false
+  },
+  {
+    "id": "hubspot",
+    "name": "HubSpot",
+    "category": "saas",
+    "statusPageUrl": "https://status.hubspot.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.hubspot.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 180,
+    "defaultEnabled": false
+  },
+  {
+    "id": "atlassian",
+    "name": "Atlassian (Jira/Confluence)",
+    "category": "devtools",
+    "statusPageUrl": "https://status.atlassian.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.atlassian.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "bitbucket",
+    "name": "Bitbucket",
+    "category": "devtools",
+    "statusPageUrl": "https://bitbucket.status.atlassian.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://bitbucket.status.atlassian.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "gitlab",
+    "name": "GitLab",
+    "category": "devtools",
+    "statusPageUrl": "https://status.gitlab.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.gitlab.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "shopify",
+    "name": "Shopify",
+    "category": "ecommerce",
+    "statusPageUrl": "https://www.shopifystatus.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://www.shopifystatus.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "square",
+    "name": "Square",
+    "category": "payments",
+    "statusPageUrl": "https://issquareup.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://issquareup.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "braintree",
+    "name": "Braintree",
+    "category": "payments",
+    "statusPageUrl": "https://status.braintreepayments.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.braintreepayments.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "plaid",
+    "name": "Plaid",
+    "category": "payments",
+    "statusPageUrl": "https://status.plaid.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.plaid.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "slack",
+    "name": "Slack",
+    "category": "communication",
+    "statusPageUrl": "https://status.slack.com",
+    "ingestion": { "type": "rss", "url": "https://status.slack.com/feed/rss" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "zoom",
+    "name": "Zoom",
+    "category": "communication",
+    "statusPageUrl": "https://status.zoom.us",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.zoom.us/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "railway",
+    "name": "Railway",
+    "category": "hosting",
+    "statusPageUrl": "https://status.railway.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.railway.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 120,
+    "defaultEnabled": false
+  },
+  {
+    "id": "upstash",
+    "name": "Upstash",
+    "category": "databases",
+    "statusPageUrl": "https://status.upstash.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.upstash.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 180,
+    "defaultEnabled": false
+  },
+  {
+    "id": "turso",
+    "name": "Turso",
+    "category": "databases",
+    "statusPageUrl": "https://status.turso.tech",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.turso.tech/api/v2/summary.json" },
+    "pollIntervalSeconds": 180,
+    "defaultEnabled": false
+  },
+  {
+    "id": "deno",
+    "name": "Deno Deploy",
+    "category": "hosting",
+    "statusPageUrl": "https://www.denostatus.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://www.denostatus.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 180,
+    "defaultEnabled": false
+  },
+  {
+    "id": "hashicorp",
+    "name": "HashiCorp Cloud",
+    "category": "cloud",
+    "statusPageUrl": "https://status.hashicorp.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.hashicorp.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 180,
+    "defaultEnabled": false
+  },
+  {
+    "id": "grafana",
+    "name": "Grafana Cloud",
+    "category": "monitoring",
+    "statusPageUrl": "https://status.grafana.com",
+    "ingestion": { "type": "statuspage-api", "url": "https://status.grafana.com/api/v2/summary.json" },
+    "pollIntervalSeconds": 180,
+    "defaultEnabled": false
+  }
+]

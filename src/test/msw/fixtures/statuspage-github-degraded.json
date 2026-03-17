@@ -1,0 +1,56 @@
+{
+  "page": {
+    "id": "kctbh9vbitez",
+    "name": "GitHub",
+    "url": "https://www.githubstatus.com",
+    "time_zone": "Etc/UTC",
+    "updated_at": "2026-03-15T06:00:00.000Z"
+  },
+  "status": {
+    "indicator": "minor",
+    "description": "Minor Service Outage"
+  },
+  "components": [
+    {
+      "id": "br0l2tvcx85d",
+      "name": "Git Operations",
+      "status": "operational",
+      "description": "Performance of git clones, pulls, pushes",
+      "group_id": null
+    },
+    {
+      "id": "brv1bkgrwx7q",
+      "name": "API Requests",
+      "status": "degraded_performance",
+      "description": null,
+      "group_id": null
+    },
+    {
+      "id": "h2ftsgbw7kmk",
+      "name": "Actions",
+      "status": "partial_outage",
+      "description": "Workflows, Compute and Orchestration",
+      "group_id": null
+    }
+  ],
+  "incidents": [
+    {
+      "id": "abc123",
+      "name": "Degraded performance for GitHub Actions",
+      "status": "investigating",
+      "impact": "minor",
+      "shortlink": "https://stspg.io/abc123",
+      "created_at": "2026-03-15T05:30:00.000Z",
+      "updated_at": "2026-03-15T05:45:00.000Z",
+      "resolved_at": null,
+      "incident_updates": [
+        {
+          "id": "upd1",
+          "status": "investigating",
+          "body": "We are investigating reports of degraded performance for GitHub Actions.",
+          "created_at": "2026-03-15T05:30:00.000Z"
+        }
+      ]
+    }
+  ]
+}

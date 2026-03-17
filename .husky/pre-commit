@@ -1,0 +1,100 @@
+#!/bin/sh
+
+echo ""
+echo "╔═══════════════════════════════════════════════════╗"
+echo "║        StatusPulse Pre-Commit Quality Gate        ║"
+echo "╚═══════════════════════════════════════════════════╝"
+echo ""
+
+# Step 1: Lint staged files
+echo "› [1/6] Linting staged files..."
+npx lint-staged || {
+  echo ""
+  echo "❌  Lint failed. Fix the issues above before committing."
+  exit 1
+}
+
+# Step 2: Type checking
+echo ""
+echo "› [2/6] Type checking..."
+npx tsc --noEmit || {
+  echo ""
+  echo "❌  Type errors found. Fix them before committing."
+  exit 1
+}
+
+# Step 3: Backend tests
+echo ""
+echo "› [3/6] Running backend tests..."
+npx vitest run --reporter=dot 2>&1 || {
+  echo ""
+  echo "❌  Tests failed. Fix failing tests before committing."
+  exit 1
+}
+
+# Step 4: Frontend tests
+echo ""
+echo "› [4/6] Running frontend tests..."
+cd web && npx vitest run --reporter=dot 2>&1 || {
+  echo ""
+  echo "❌  Frontend tests failed. Fix failing tests before committing."
+  exit 1
+}
+cd ..
+
+# Step 5: File length check (no file > 200 lines)
+echo ""
+echo "› [5/6] Checking file lengths (max 200 lines)..."
+OVERSIZED=$(find src -name '*.ts' -not -path '*/test/*' -not -path '*/mock/*' | while read f; do
+  lines=$(grep -c '' "$f")
+  if [ "$lines" -gt 200 ]; then
+    echo "  ⚠  $f ($lines lines)"
+  fi
+done)
+
+if [ -n "$OVERSIZED" ]; then
+  echo "$OVERSIZED"
+  echo ""
+  echo "❌  Files above 200 lines detected. Split them before committing."
+  exit 1
+fi
+
+# Step 6: No inline CSS in app code (style={{}} must come from globals.css / Tailwind)
+echo ""
+echo "› [6/6] Checking for inline CSS (style={{}})..."
+INLINE_CSS=$(grep -rn 'style={{' web/src --include='*.tsx' --include='*.ts' \
+  | grep -v '/ui/' \
+  | grep -v 'node_modules' || true)
+
+if [ -n "$INLINE_CSS" ]; then
+  echo "$INLINE_CSS"
+  echo ""
+  echo "❌  Inline CSS detected in app code. Use Tailwind classes or globals.css variables instead."
+  echo "   (shadcn/ui components in web/src/components/ui/ are exempt)"
+  exit 1
+fi
+
+# All checks passed — show quality reminder
+echo ""
+echo "╔═══════════════════════════════════════════════════════════════╗"
+echo "║                                                             ║"
+echo "║   ✅  All checks passed!                                    ║"
+echo "║                                                             ║"
+echo "║   Before you commit, ask yourself:                          ║"
+echo "║                                                             ║"
+echo "║   📝  Have I written the BEST test case?                    ║"
+echo "║       → Does it cover edge cases, error paths, and          ║"
+echo "║         the behavior I actually care about?                 ║"
+echo "║                                                             ║"
+echo "║   📖  Have I written the BEST documentation?                ║"
+echo "║       → Will someone reading this in 6 months               ║"
+echo "║         understand WHY, not just WHAT?                      ║"
+echo "║                                                             ║"
+echo "║   💎  Have I written the BEST possible code?                ║"
+echo "║       → Is it simple? Is it clear? Would I be               ║"
+echo "║         proud to show this at a code review?                ║"
+echo "║                                                             ║"
+echo "║   If not — there's no shame in amending before pushing.     ║"
+echo "║                                                             ║"
+echo "╚═══════════════════════════════════════════════════════════════╝"
+echo ""

@@ -1,0 +1,766 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "StatusPulse API",
+    "version": "1.0.0",
+    "description": "Self-hosted status aggregator for monitoring SaaS vendor health"
+  },
+  "servers": [{ "url": "/api" }],
+  "paths": {
+    "/status": {
+      "get": {
+        "operationId": "getStatus",
+        "summary": "Aggregate status overview",
+        "parameters": [
+          { "name": "region", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status overview",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusOverview" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services": {
+      "get": {
+        "operationId": "getServices",
+        "summary": "List monitored services",
+        "parameters": [
+          { "name": "region", "in": "query", "schema": { "type": "string" } },
+          { "name": "category", "in": "query", "schema": { "type": "string" } },
+          { "name": "enabled", "in": "query", "schema": { "type": "string", "default": "true" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Service list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "services": { "type": "array", "items": { "$ref": "#/components/schemas/Service" } }
+                  },
+                  "required": ["services"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "addService",
+        "summary": "Add/enable a vendor for monitoring",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AddServiceRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Service added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "ok": { "type": "boolean" }, "id": { "type": "string" } },
+                  "required": ["ok", "id"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services/catalog/all": {
+      "get": {
+        "operationId": "getCatalog",
+        "summary": "List all available vendors from catalog",
+        "responses": {
+          "200": {
+            "description": "Vendor catalog",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "vendors": { "type": "array", "items": { "$ref": "#/components/schemas/VendorConfig" } }
+                  },
+                  "required": ["vendors"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services/{id}": {
+      "get": {
+        "operationId": "getServiceById",
+        "summary": "Get service details with components",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Service with components",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "service": { "$ref": "#/components/schemas/Service" },
+                    "components": { "type": "array", "items": { "$ref": "#/components/schemas/Component" } }
+                  },
+                  "required": ["service", "components"]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateService",
+        "summary": "Update a service",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateServiceRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/OkResponse" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteService",
+        "summary": "Delete a service",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/OkResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/incidents": {
+      "get": {
+        "operationId": "getIncidents",
+        "summary": "List incidents",
+        "parameters": [
+          { "name": "active", "in": "query", "schema": { "type": "string", "default": "true" } },
+          { "name": "vendor", "in": "query", "schema": { "type": "string" } },
+          { "name": "region", "in": "query", "schema": { "type": "string" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 50 } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Incident list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "incidents": { "type": "array", "items": { "$ref": "#/components/schemas/Incident" } }
+                  },
+                  "required": ["incidents"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/incidents/{id}": {
+      "get": {
+        "operationId": "getIncidentById",
+        "summary": "Get incident with updates",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Incident with updates",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "incident": { "$ref": "#/components/schemas/Incident" },
+                    "updates": { "type": "array", "items": { "$ref": "#/components/schemas/IncidentUpdate" } }
+                  },
+                  "required": ["incident", "updates"]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public/status": {
+      "get": {
+        "operationId": "getPublicStatus",
+        "summary": "Public aggregate status overview (no auth)",
+        "tags": ["public"],
+        "responses": {
+          "200": {
+            "description": "Status overview",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusOverview" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public/services": {
+      "get": {
+        "operationId": "getPublicServices",
+        "summary": "Public list of enabled services (no auth)",
+        "tags": ["public"],
+        "responses": {
+          "200": {
+            "description": "Service list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "services": { "type": "array", "items": { "$ref": "#/components/schemas/Service" } }
+                  },
+                  "required": ["services"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public/incidents": {
+      "get": {
+        "operationId": "getPublicIncidents",
+        "summary": "Public list of active incidents (no auth)",
+        "tags": ["public"],
+        "responses": {
+          "200": {
+            "description": "Active incident list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "incidents": { "type": "array", "items": { "$ref": "#/components/schemas/Incident" } }
+                  },
+                  "required": ["incidents"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/alert-targets": {
+      "get": {
+        "operationId": "getAlertTargets",
+        "summary": "List alert targets",
+        "responses": {
+          "200": {
+            "description": "Alert target list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "targets": { "type": "array", "items": { "$ref": "#/components/schemas/AlertTarget" } }
+                  },
+                  "required": ["targets"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createAlertTarget",
+        "summary": "Create an alert target",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateAlertTargetRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "ok": { "type": "boolean" }, "id": { "type": "string" } },
+                  "required": ["ok", "id"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/alert-targets/{id}": {
+      "delete": {
+        "operationId": "deleteAlertTarget",
+        "summary": "Delete an alert target",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/OkResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/alert-targets/{id}/test": {
+      "post": {
+        "operationId": "testAlertTarget",
+        "summary": "Send a test alert",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Test result",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/OkResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/plugins": {
+      "get": {
+        "operationId": "getPlugins",
+        "summary": "List plugins",
+        "responses": {
+          "200": {
+            "description": "Plugin list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "plugins": { "type": "array", "items": { "$ref": "#/components/schemas/Plugin" } }
+                  },
+                  "required": ["plugins"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createPlugin",
+        "summary": "Register a custom status plugin",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreatePluginRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "ok": { "type": "boolean" }, "id": { "type": "string" } },
+                  "required": ["ok", "id"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/history/{serviceId}": {
+      "get": {
+        "operationId": "getHistory",
+        "summary": "Get uptime history and status changes for a service",
+        "parameters": [
+          { "name": "serviceId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "days", "in": "query", "schema": { "type": "integer", "default": 30 } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Uptime history",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HistoryResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "Service not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/plugins/{id}": {
+      "patch": {
+        "operationId": "updatePlugin",
+        "summary": "Update a plugin",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdatePluginRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/OkResponse" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deletePlugin",
+        "summary": "Delete a plugin and its service",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/OkResponse" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NormalizedStatus": {
+        "type": "string",
+        "enum": ["operational", "degraded", "outage", "maintenance"]
+      },
+      "Service": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "vendorId": { "type": "string" },
+          "name": { "type": "string" },
+          "category": { "type": "string" },
+          "status": { "type": "string" },
+          "description": { "type": "string", "nullable": true },
+          "statusPageUrl": { "type": "string", "nullable": true },
+          "region": { "type": "string", "nullable": true },
+          "enabled": { "type": "boolean" },
+          "lastCheckedAt": { "type": "string", "nullable": true },
+          "lastChangedAt": { "type": "string", "nullable": true },
+          "createdAt": { "type": "string" }
+        },
+        "required": ["id", "vendorId", "name", "category", "status", "enabled", "createdAt"]
+      },
+      "Component": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "serviceId": { "type": "string" },
+          "name": { "type": "string" },
+          "status": { "type": "string" },
+          "region": { "type": "string", "nullable": true },
+          "description": { "type": "string", "nullable": true },
+          "updatedAt": { "type": "string" }
+        },
+        "required": ["id", "serviceId", "name", "status", "updatedAt"]
+      },
+      "Incident": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "serviceId": { "type": "string" },
+          "externalId": { "type": "string", "nullable": true },
+          "title": { "type": "string" },
+          "status": { "type": "string" },
+          "impact": { "type": "string", "nullable": true },
+          "shortlink": { "type": "string", "nullable": true },
+          "region": { "type": "string", "nullable": true },
+          "createdAt": { "type": "string" },
+          "updatedAt": { "type": "string" },
+          "resolvedAt": { "type": "string", "nullable": true }
+        },
+        "required": ["id", "serviceId", "title", "status", "createdAt", "updatedAt"]
+      },
+      "IncidentUpdate": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "incidentId": { "type": "string" },
+          "status": { "type": "string" },
+          "body": { "type": "string" },
+          "createdAt": { "type": "string" }
+        },
+        "required": ["id", "incidentId", "status", "body", "createdAt"]
+      },
+      "AlertTarget": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "type": "string", "enum": ["slack", "webhook", "teams"] },
+          "name": { "type": "string" },
+          "url": { "type": "string" },
+          "secret": { "type": "string", "nullable": true },
+          "enabled": { "type": "boolean" },
+          "filterRegion": { "type": "string", "nullable": true },
+          "filterCategory": { "type": "string", "nullable": true },
+          "createdAt": { "type": "string" }
+        },
+        "required": ["id", "type", "name", "url", "enabled", "createdAt"]
+      },
+      "Plugin": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "config": { "type": "object" },
+          "enabled": { "type": "boolean" },
+          "createdAt": { "type": "string" }
+        },
+        "required": ["id", "name", "type", "config", "enabled", "createdAt"]
+      },
+      "VendorConfig": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "category": { "type": "string" },
+          "statusPageUrl": { "type": "string" },
+          "ingestion": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string", "enum": ["statuspage-api", "rss", "atom", "scrape"] },
+              "url": { "type": "string" }
+            },
+            "required": ["type", "url"]
+          },
+          "pollIntervalSeconds": { "type": "integer" },
+          "defaultEnabled": { "type": "boolean" }
+        },
+        "required": ["id", "name", "category", "statusPageUrl", "ingestion", "pollIntervalSeconds", "defaultEnabled"]
+      },
+      "StatusOverview": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string" },
+          "totalServices": { "type": "integer" },
+          "activeIncidents": { "type": "integer" },
+          "staleServices": { "type": "integer" },
+          "byCategory": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "status": { "type": "string" },
+                "count": { "type": "integer" }
+              },
+              "required": ["status", "count"]
+            }
+          },
+          "byRegion": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "status": { "type": "string" },
+                "count": { "type": "integer" }
+              },
+              "required": ["status", "count"]
+            }
+          },
+          "lastUpdated": { "type": "string" }
+        },
+        "required": ["status", "totalServices", "activeIncidents", "staleServices", "byCategory", "byRegion", "lastUpdated"]
+      },
+      "AddServiceRequest": {
+        "type": "object",
+        "properties": {
+          "vendorId": { "type": "string" },
+          "region": { "type": "string" },
+          "enabled": { "type": "boolean" }
+        },
+        "required": ["vendorId"]
+      },
+      "UpdateServiceRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "category": { "type": "string" },
+          "region": { "type": "string" },
+          "enabled": { "type": "boolean" }
+        }
+      },
+      "CreateAlertTargetRequest": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string", "enum": ["slack", "webhook", "teams"] },
+          "name": { "type": "string" },
+          "url": { "type": "string", "format": "uri" },
+          "secret": { "type": "string" },
+          "enabled": { "type": "boolean", "default": true },
+          "filterRegion": { "type": "string" },
+          "filterCategory": { "type": "string" }
+        },
+        "required": ["type", "name", "url"]
+      },
+      "CreatePluginRequest": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "type": { "type": "string", "default": "custom-api" },
+          "category": { "type": "string" },
+          "config": {
+            "type": "object",
+            "properties": {
+              "url": { "type": "string" },
+              "headers": { "type": "object", "additionalProperties": { "type": "string" } },
+              "statusPath": { "type": "string" },
+              "statusMapping": { "type": "object", "additionalProperties": { "type": "string" } },
+              "region": { "type": "string" }
+            },
+            "required": ["url"]
+          },
+          "enabled": { "type": "boolean", "default": true }
+        },
+        "required": ["name", "config"]
+      },
+      "UpdatePluginRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "config": { "type": "object" },
+          "enabled": { "type": "boolean" }
+        }
+      },
+      "StatusChange": {
+        "type": "object",
+        "properties": {
+          "previousStatus": { "type": "string" },
+          "newStatus": { "type": "string" },
+          "changedAt": { "type": "string" }
+        },
+        "required": ["previousStatus", "newStatus", "changedAt"]
+      },
+      "UptimeStats": {
+        "type": "object",
+        "properties": {
+          "percentage": { "type": "number" },
+          "totalChanges": { "type": "integer" },
+          "lastOutage": { "type": "string", "nullable": true }
+        },
+        "required": ["percentage", "totalChanges", "lastOutage"]
+      },
+      "DailyUptime": {
+        "type": "object",
+        "properties": {
+          "date": { "type": "string" },
+          "uptimePercent": { "type": "number" },
+          "status": { "type": "string" }
+        },
+        "required": ["date", "uptimePercent", "status"]
+      },
+      "HistoryResponse": {
+        "type": "object",
+        "properties": {
+          "changes": { "type": "array", "items": { "$ref": "#/components/schemas/StatusChange" } },
+          "uptime": { "$ref": "#/components/schemas/UptimeStats" },
+          "dailyUptime": { "type": "array", "items": { "$ref": "#/components/schemas/DailyUptime" } }
+        },
+        "required": ["changes", "uptime", "dailyUptime"]
+      },
+      "OkResponse": {
+        "type": "object",
+        "properties": { "ok": { "type": "boolean" } },
+        "required": ["ok"]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": { "error": { "type": "string" } },
+        "required": ["error"]
+      }
+    }
+  }
+}

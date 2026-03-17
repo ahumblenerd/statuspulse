@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>AWS Service Health Dashboard</title>
+    <link>https://status.aws.amazon.com</link>
+    <description>AWS Service Health Dashboard RSS Feed</description>
+    <item>
+      <title>Service is operating normally: Amazon EC2 (US-EAST-1)</title>
+      <description>The issue has been resolved and the service is operating normally.</description>
+      <pubDate>Sat, 14 Mar 2026 12:00:00 GMT</pubDate>
+      <guid>aws-ec2-resolved-001</guid>
+    </item>
+    <item>
+      <title>Informational message: Amazon S3 (US-WEST-2)</title>
+      <description>We are investigating increased error rates for S3 in us-west-2.</description>
+      <pubDate>Sat, 14 Mar 2026 10:00:00 GMT</pubDate>
+      <guid>aws-s3-info-001</guid>
+    </item>
+  </channel>
+</rss>

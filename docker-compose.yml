@@ -1,0 +1,83 @@
+services:
+  restate:
+    image: docker.io/restatedev/restate:1.3
+    ports:
+      - "8080:8080"   # ingress
+      - "9070:9070"   # admin
+      - "9071:9071"   # metrics
+    volumes:
+      - restate-data:/target/restate-data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9070/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  app:
+    build: .
+    ports:
+      - "3000:3000"   # HTTP API + Dashboard
+      - "3001:3001"   # MCP
+      - "9080:9080"   # Restate endpoint
+    environment:
+      - DATABASE_PATH=/app/data/statuspulse.db
+      - RESTATE_ADMIN_URL=http://restate:9070
+      - RESTATE_INGRESS_URL=http://restate:8080
+      - API_PORT=3000
+      - MCP_PORT=3001
+      - RESTATE_PORT=9080
+      - AUTH_MODE=${AUTH_MODE:-none}
+      - API_KEY=${API_KEY:-changeme}
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL:-}
+      - WEBHOOK_SECRET=${WEBHOOK_SECRET:-statuspulse-secret}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - DEFAULT_POLL_INTERVAL_SECONDS=${DEFAULT_POLL_INTERVAL_SECONDS:-120}
+    volumes:
+      - app-data:/app/data
+    depends_on:
+      restate:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # One-shot: register app with Restate and kick off scheduler
+  setup:
+    image: curlimages/curl:latest
+    depends_on:
+      restate:
+        condition: service_healthy
+      app:
+        condition: service_started
+    entrypoint: |
+      sh -c '
+        echo "Waiting for app to be ready..."
+        for i in $(seq 1 30); do
+          if curl -sf http://app:3000/health > /dev/null 2>&1; then
+            echo "App is ready!"
+            break
+          fi
+          echo "Attempt $i/30 - app not ready yet..."
+          sleep 1
+        done
+
+        echo "Registering app with Restate..."
+        curl -X POST http://restate:9070/deployments \
+          -H "Content-Type: application/json" \
+          -d "{\"uri\": \"http://app:9080\"}" \
+          --retry 5 --retry-delay 3 --retry-all-errors
+
+        echo ""
+        echo "Kicking off scheduler..."
+        curl -X POST http://restate:8080/scheduler/run/send \
+          -H "Content-Type: application/json" \
+          -d "{}" \
+          --retry 3 --retry-delay 2 --retry-all-errors
+
+        echo ""
+        echo "Setup complete!"
+      '
+    restart: "no"
+
+volumes:
+  restate-data:
+  app-data:

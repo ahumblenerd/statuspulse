@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Google Cloud Status</title>
+  <link href="https://status.cloud.google.com" rel="alternate"/>
+  <updated>2026-03-15T06:00:00Z</updated>
+  <entry>
+    <title>Resolved: Cloud SQL maintenance completed</title>
+    <summary>Scheduled maintenance for Cloud SQL has been completed successfully.</summary>
+    <published>2026-03-14T20:00:00Z</published>
+    <updated>2026-03-14T22:00:00Z</updated>
+    <id>gcp-cloudsql-maint-001</id>
+    <link href="https://status.cloud.google.com/incidents/abc" rel="alternate"/>
+  </entry>
+</feed>
